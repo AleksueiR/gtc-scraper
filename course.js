@@ -17,7 +17,7 @@ fs.readFile('courseids.json', function(err, data) {
 
     //console.log(jsdata.length);
 
-    jsdata.splice(0, 30).forEach(function(iddata) {
+    jsdata./*splice(0, 2).*/forEach(function(iddata) {
 
         getCourseDetail(iddata.url)
             .then(function(data) {
@@ -32,11 +32,11 @@ fs.readFile('courseids.json', function(err, data) {
 
                 // create course folder
                 rimraf(baseFolder + show.getFileName(), function() {
-                    fs.outputFileSync(baseFolder + show.getFileName(), show.toXML());
-                    fs.outputFileSync(baseFolder + show.getListingName(), show.getEpisodeListing());
+                    fs.outputFileSync(baseFolder + show.getFileName(), show.toXML(), 'utf8');
+                    fs.outputFileSync(baseFolder + show.getListingName(), show.getEpisodeListing(), 'utf8');
 
                     show.episodes.forEach(function(episode) {
-                        fs.outputFileSync(baseFolder + episode.getFileName(), episode.toXML());
+                        fs.outputFileSync(baseFolder + episode.getFileName(), episode.toXML(), 'utf8');                        
                     });
 
                     //console.log(show.images.packageLarge);

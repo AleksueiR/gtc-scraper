@@ -3,6 +3,7 @@ var Episode = require('./episode');
 var extend = require('extend');
 var jstoxml = require('jstoxml');
 var sanitize = require("sanitize-filename");
+var os = require('os'), EOL = os.EOL;
 
 var _showTemplate = {
     "tvshow": {
@@ -135,7 +136,7 @@ var Show = (function() {
         ext = ext || '.mkv';
 
         this.episodes.forEach(function(episode) {
-            listing += episode.getFileName(ext, true) + '\n';
+            listing += episode.getFileName(ext, true) + EOL;
         });
 
         return listing;
