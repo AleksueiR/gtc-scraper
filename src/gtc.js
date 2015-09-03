@@ -1,7 +1,9 @@
 var scraperjs = require('scraperjs');
 var request = require('request');
-var fs = require('fs');
+var fs = require('fs-extra');
 var Promise = require('promise');
+
+var Show = require('./model/show');
 
 module.exports.getCategories = function() {
     var url = 'http://www.thegreatcourses.com/';
@@ -15,7 +17,7 @@ module.exports.getCategories = function() {
                 var categories = $('.megamenu-list').first().find('a.level-top').map(
                     function() {
                         var category = $(this);
-                        
+
                         return {
                             name: category.text().trim(),
                             url: category.attr('href')
@@ -67,15 +69,45 @@ module.exports.getCourseInfo = function(ids) {
 
                 var coursesData = JSON.parse(body);
                 fulfill(coursesData);
-                
-                /*fs.writeFile("courseids.json", JSON.stringify(coursesData, null, 4), function(err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-
-                    console.log("The file was saved!", ids.length, coursesData.length);
-                });*/
             }
         );
     });
+};
+
+module.exports.getCourseDetails = function(courseData) {
+    return scraperjs.StaticScraper.create(courseData.url)
+        .scrape(function($) {
+            var data = {};
+
+            data.lectures = $('.lectures-container').first().find('.lectures-list li').map(function() {
+                return {
+                    title: $(this).find('.lecture-title').text(),
+                    description: $(this).find('.lecture-description-block').contents().first().text().trim(),
+                };
+            }).get();
+
+            data.rating = $('span[itemprop="ratingValue"]').first().text().trim();
+            data.votes = $('meta[itemprop="reviewCount"]').first().attr('content');
+
+            data.description = $('#course-description-truncated').text().trim();
+            data.runtime = $('.course-counters span').last().text().split(' ')[0];
+
+            data.professor = {
+                name: $('.your-professor-container .professor-name').text().trim(),
+                role: $('.your-professor-container .professor-post').text().trim(),
+                thumb: $('.your-professor-container .big-photo > img').attr('src')
+            };
+
+            data.packageSmall = $('.main-container .product-image-block > img').first().attr('src');
+            data.packageLarge = data.packageSmall.replace('thumbnail/150x210', 'image/800x600');
+            data.baseImages = $('a.cloud-zoom-gallery').map(function() {
+                return $(this).attr('href');
+            }).get();
+
+            return data;
+        }, function(data) {
+            courseData.scrapedData = data;
+
+            return new Show(courseData);
+        });
 };

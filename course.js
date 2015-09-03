@@ -115,40 +115,7 @@ fs.readFile('courseids.json', function(err, data) {
 
 
 function getCourseDetail(url) {
-    return scraperjs.StaticScraper.create(url)
-        .scrape(function($) {
-            var data = {};
-
-            data.lectures = $('.lectures-container').first().find('.lectures-list li').map(function() {
-                return {
-                    title: $(this).find('.lecture-title').text(),
-                    description: $(this).find('.lecture-description-block').contents().first().text().trim(),
-                };
-            }).get();
-
-            data.rating = $('span[itemprop="ratingValue"]').first().text().trim();
-            data.votes = $('meta[itemprop="reviewCount"]').first().attr('content');
-
-            data.description = $('#course-description-truncated').text().trim();
-            data.runtime = $('.course-counters span').last().text().split(' ')[0];
-
-            data.professor = {
-                name: $('.your-professor-container .professor-name').text().trim(),
-                role: $('.your-professor-container .professor-post').text().trim(),
-                thumb: $('.your-professor-container .big-photo > img').attr('src')
-            };
-
-            data.packageSmall = $('.main-container .product-image-block > img').first().attr('src');
-            data.packageLarge = data.packageSmall.replace('thumbnail/150x210', 'image/800x600');
-            data.baseImages = $('a.cloud-zoom-gallery').map(function() {
-                return $(this).attr('href');
-            }).get();
-
-            return data;
-        }, function(data) {
-            //console.log(data);
-            return data;
-        });
+    
 }
 
 function downloadFile(target, destination, callback) {

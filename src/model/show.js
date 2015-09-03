@@ -101,7 +101,8 @@ var Show = (function() {
     Show.prototype.getFileName = function() {
         var showNameSan = sanitize(this.data.tvshow.title).trim();
 
-        return showNameSan + '/tvshow.nfo';
+        //return showNameSan + '/tvshow.nfo';
+        return 'tvshow.nfo';
     };
 
     Show.prototype.getPosterFileName = function(prefix) {

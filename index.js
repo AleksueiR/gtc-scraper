@@ -6,6 +6,8 @@ var fs = require('fs-extra');
 // send a fake post request to get course descriptions
 function getStuff(ids) {}
 
+// use this for comparison https://github.com/mattyork/fuzzy
+
 var ledger;
 
 gtc
@@ -49,7 +51,8 @@ gtc
     })
     .then(function(categories) {
         //console.log(categories);
-
+        
+        // assigning categories
         categories.forEach(function(category) {
 
             console.log('Updating', category.name, 'category');
