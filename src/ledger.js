@@ -2,8 +2,7 @@ var gtc = require('./gtc');
 var Promise = require('promise');
 var find = require('array-find');
 
-var fs = require('fs-extra');
-var readFile = Promise.denodeify(require('fs-extra').readFile);
+var outputJson = Promise.denodeify(require('fs-extra').outputJson);
 var readJson = Promise.denodeify(require('fs-extra').readJson);
 
 var sprintf = require("sprintf-js").sprintf;
@@ -73,13 +72,13 @@ function updateLedger(ids) {
             });
 
             console.log('Saving ledger...');
-            fs.outputFileSync('ledger.json', JSON.stringify(ledger, null, 4), 'utf8');
+            outputJson('ledger.json', ledger, {spaces: 2}, 'utf8');
 
             return ledger;
         });
 }
 
-module.exports = function() {
+module.exports.getLedger = function(skipCheck) {
     return new Promise(function(fulfill, reject) {
         readJson('ledger.json')
             .catch(function() {
@@ -100,6 +99,11 @@ module.exports = function() {
                 ledger = data;
                 console.log(sprintf('Ledger contains %s records.', ledger.length));
                 console.log('Checking for new GTC courses...');
+                
+                if (skipCheck) {
+                    return fulfill(ledger);
+                }
+                
                 return gtc.scrapeCataloguePage('http://www.thegreatcourses.com/courses')
                     .then(function(ids) {
                         if (ids.length === ledger.length) {
@@ -118,9 +122,3 @@ module.exports = function() {
             });
     });
 };
-
-
-module.exports()
-    .then(function(data) {
-        console.log(data.length); //, data.splice(0, 2));
-    });
