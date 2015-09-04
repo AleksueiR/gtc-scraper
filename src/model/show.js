@@ -2,7 +2,8 @@ var moment = require('moment');
 var Episode = require('./episode');
 var extend = require('extend');
 var jstoxml = require('jstoxml');
-var sanitize = require("sanitize-filename");
+var util = require('./../util');
+var sprintf = require("sprintf-js").sprintf;
 var os = require('os'), EOL = os.EOL;
 
 var _showTemplate = {
@@ -49,7 +50,6 @@ var Show = (function() {
 
     function Show(data) {
         var tvshow;
-        var _episodes
         var that = this;
 
         this.data = extend(true, {}, _showTemplate);
@@ -62,8 +62,8 @@ var Show = (function() {
 
         tvshow = this.data.tvshow;
 
-        tvshow.title = data.name;
-        tvshow.showtitle = data.name;
+        tvshow.title = util.sanitize(data.name);
+        tvshow.showtitle = util.sanitize(data.name);
         tvshow.rating = data.scrapedData.rating;
         tvshow.votes = data.scrapedData.votes;
         //tvshow.year = ???;
@@ -99,36 +99,37 @@ var Show = (function() {
     };
 
     Show.prototype.getFileName = function() {
-        var showNameSan = sanitize(this.data.tvshow.title).trim();
+        //var showNameSan = sanitize(this.data.tvshow.title).trim();
 
         //return showNameSan + '/tvshow.nfo';
         return 'tvshow.nfo';
     };
+    
+    Show.prototype.getShowTitle = function() {
+        return this.data.tvshow.title;
+    }
 
     Show.prototype.getPosterFileName = function(prefix) {
-        var showNameSan = sanitize(this.data.tvshow.title).trim();
+        //var showName = this.data.tvshow.title;
         prefix = prefix || '';
 
-        return showNameSan + '/' + prefix + 'poster.jpg';
+        //return showName + '/' + prefix + 'poster.jpg';
+        return prefix + 'poster.jpg';
     };
 
     Show.prototype.getFanartFileName = function(prefix) {
-        var showNameSan = sanitize(this.data.tvshow.title).trim();
+        //var showNameSan = sanitize(this.data.tvshow.title).trim();
         prefix = prefix || '';
 
-        return showNameSan + '/' + prefix + 'fanart.jpg';
-    };
-
-    Show.prototype.getNameSan = function() {
-        var showNameSan = sanitize(this.data.tvshow.title).trim();
-
-        return showNameSan;
+        //return showNameSan + '/' + prefix + 'fanart.jpg';
+        return prefix + 'fanart.jpg';
     };
 
     Show.prototype.getListingName = function() {
-        var showNameSan = sanitize(this.data.tvshow.title).trim();
+        //var showNameSan = sanitize(this.data.tvshow.title).trim();
 
-        return showNameSan + '/filenames.txt';
+        //return showNameSan + '/filenames.txt';
+        return 'filenames.txt';
     }
 
     Show.prototype.getEpisodeListing = function(ext) {

@@ -1,13 +1,15 @@
 var moment = require('moment');
 var extend = require('extend');
 var jstoxml = require('jstoxml');
-var sanitize = require("sanitize-filename");
+var util = require('./../util');
+var p = require('path');
+var sprintf = require("sprintf-js").sprintf;
 
 var _episodeTemplate = {
     "episodedetails": {
         "title": "My TV Episode",
         //"rating": "10.00",
-        "season": "1",
+        "season": "01",
         "episode": "1",
         "plot": "he best episode in the world",
         "thumb": "http://thetvdb.com/banners/episodes/164981/2528821.jpg",
@@ -44,10 +46,10 @@ var Episode = (function() {
 
         episode = this.data.episodedetails;
 
-        episode.title = data.title.replace(/\u2013|\u2014/g, '-').trim();
+        episode.title = util.sanitize(data.title);
         //episode.rating
         //episode.season = 1;
-        episode.episode = count.toString();
+        episode.episode = sprintf('%02d', count.toString());
         episode.plot = data.description;
         episode.thumb = showData.thumb_grid;
         episode.aired = moment.unix(showData.news_from_date).add(count, 'd').format('YYYY-MM-DD');
@@ -59,7 +61,7 @@ var Episode = (function() {
             'thumb': showData.scrapedData.professor.thumb
         }];
     }
-
+    
     Episode.prototype.toXML = function() {
         return jstoxml.toXML(this.data, {
             header: true,
@@ -67,16 +69,27 @@ var Episode = (function() {
         });
     };
 
+    Episode.prototype.getEpisodeNumber = function() {
+        return this.data.episodedetails.episode;
+    };
+    
+    Episode.prototype.getSeasonNumber = function() {
+        return this.data.episodedetails.season;
+    };
+
     Episode.prototype.getFileName = function(ext, bare) {
-        var showNameSan = sanitize(this.showData.name).replace(/\u2013|\u2014/g, '-').trim();
-        var episodeNameSan = sanitize(this.data.episodedetails.title).replace(/\u2013|\u2014/g, '-').trim();
-        var seasonId = pad(this.data.episodedetails.season, 2);
-        var episodeId = pad(this.data.episodedetails.episode, 2);
+        var showName = this.showData.name;
+        var episodeTitle = this.data.episodedetails.title;
+        var seasonId = this.data.episodedetails.season;
+        var episodeId = this.data.episodedetails.episode;
+
 
         ext = ext || '.nfo';
         bare = (typeof bare !== "undefined") ? bare : false;
 
-        return (bare ? '' : showNameSan + '/Season ' + seasonId + '/') + shortenString(showNameSan, 6) + ' - s' + seasonId + 'e' + episodeId + ' - ' + episodeNameSan + ext;
+        return sprintf('Season %s%s%s - s%se%s - %s%s', seasonId, p.sep, shortenString(showName, 6), seasonId, episodeId, episodeTitle, ext);
+
+        //return (bare ? '' : showNameSan + '/Season ' + seasonId + '/') + shortenString(showNameSan, 6) + ' - s' + seasonId + 'e' + episodeId + ' - ' + episodeNameSan + ext;
     };
 
     return Episode;
