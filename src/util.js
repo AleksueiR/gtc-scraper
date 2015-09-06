@@ -5,6 +5,7 @@ var Promise = require('promise');
 var gm = require('gm').subClass({
     imageMagick: true
 });
+var p = require('path');
 
 module.exports.sanitize = function(string) {
     return sanitize(string).replace(/\u2013|\u2014/g, '-').trim();
@@ -12,8 +13,8 @@ module.exports.sanitize = function(string) {
 
 module.exports.downloadFile = function(target, destination, callback) {
     return new Promise(function(fulfill, reject) {
-        var folder = destination.substring(0, destination.lastIndexOf('/'));
-        var fileName = destination.substring(destination.lastIndexOf('/') + 1);
+        var folder = destination.substring(0, destination.lastIndexOf(p.sep));
+        var fileName = destination.substring(destination.lastIndexOf(p.sep) + 1);
 
         //console.log('start download');
 
@@ -33,6 +34,7 @@ module.exports.downloadFile = function(target, destination, callback) {
 
 module.exports.cropPoster = function(file) {
     return new Promise(function(fulfill, reject) {
+
         gm(file)
             .crop(417, 600, 192, 0)
             .write(file, function(err) {
