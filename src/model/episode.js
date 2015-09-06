@@ -12,7 +12,7 @@ var _episodeTemplate = {
         "season": "01",
         "episode": "1",
         "plot": "he best episode in the world",
-        "thumb": "http://thetvdb.com/banners/episodes/164981/2528821.jpg",
+        //"thumb": "http://thetvdb.com/banners/episodes/164981/2528821.jpg",
         "playcount": "0",
         "credits": "Writer",
         "director": "Mr. Vision",
@@ -51,7 +51,7 @@ var Episode = (function() {
         //episode.season = 1;
         episode.episode = sprintf('%02d', count.toString());
         episode.plot = data.description;
-        episode.thumb = showData.thumb_grid;
+        //episode.thumb = showData.thumb_grid;
         episode.aired = moment.unix(showData.news_from_date).add(count, 'd').format('YYYY-MM-DD');
         episode.premiered = moment.unix(showData.news_from_date).format('YYYY-MM-DD');
 
@@ -61,7 +61,7 @@ var Episode = (function() {
             'thumb': showData.scrapedData.professor.thumb
         }];
     }
-    
+
     Episode.prototype.toXML = function() {
         return jstoxml.toXML(this.data, {
             header: true,
@@ -72,7 +72,7 @@ var Episode = (function() {
     Episode.prototype.getEpisodeNumber = function() {
         return this.data.episodedetails.episode;
     };
-    
+
     Episode.prototype.getSeasonNumber = function() {
         return this.data.episodedetails.season;
     };
