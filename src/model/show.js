@@ -3,55 +3,18 @@ var Episode = require('./episode');
 var extend = require('extend');
 var jstoxml = require('jstoxml');
 var util = require('./../util');
-var sprintf = require("sprintf-js").sprintf;
-var os = require('os'), EOL = os.EOL;
+var os = require('os'),
+    EOL = os.EOL;
+var fs = require('fs-extra');
 
-var _showTemplate = {
-    "tvshow": {
-        "title": "Show Title",
-        "showtitle": "Show Title",
-        "rating": "9.200000",
-        "votes": "42",
-        //"epbookmark": "0.000000",
-        "year": "0",
-        //"top250": "0",
-        "season": "1",
-        "episode": "176",
-        "displayseason": "-1",
-        "displayepisode": "-1",
-        "plot": "Go deeper into the medical mysteries of House, TV's most compelling drama. Hugh Laurie stars as the brilliant but sarcastic Dr. Gregory House, a maverick physician who is devoid of bedside manner. While his behavior can border on antisocial, Dr. House thrives on the challenge of solving the medical puzzles that other doctors give up on. Together with his hand-picked team of young medical experts, he'll do whatever it takes in the race against the clock to solve the case.",
-        "runtime": "0",
-        "mpaa": "TV-14",
-        "playcount": "0",
-        'status': 'Ended',
-        //"lastplayed": "1969-12-31",
-        //"id": "73255",
-        "genre": "Education", //[
-        //"Lectures",
-        //"Education"
-        //],
-        "premiered": "2004-11-16",
-        "aired": "1969-12-31",
-        "studio": "TGC",
-        "actor": [{
-            "name": "Hugh Laurie",
-            "role": "Dr. Gregory House",
-            "thumb": "http://thetvdb.com/banners/actors/23839.jpg"
-        }],
-        "resume": {
-            "position": "0.000000",
-            "total": "0.000000"
-        },
-        "dateadded": "2013-01-28 23:33:03"
-    }
-};
+var _showTemplate = fs.readJsonSync('./src/model/show.json');
 
 var Show = (function() {
 
     function Show(data) {
         var tvshow;
         var that = this;
-
+        
         this.data = extend(true, {}, _showTemplate);
         this.episodes = [];
         this.images = {
@@ -67,6 +30,10 @@ var Show = (function() {
         tvshow.rating = data.scrapedData.rating;
         tvshow.votes = data.scrapedData.votes;
         //tvshow.year = ???;
+
+        data.category.forEach(function (category) {
+            tvshow.genre += '</genre>\n<genre>' + category;
+        });
 
         tvshow.season = "1";
         tvshow.episode = data.scrapedData.lectures.length;
@@ -104,10 +71,10 @@ var Show = (function() {
         //return showNameSan + '/tvshow.nfo';
         return 'tvshow.nfo';
     };
-    
+
     Show.prototype.getShowTitle = function() {
         return this.data.tvshow.title;
-    }
+    };
 
     Show.prototype.getPosterFileName = function(prefix) {
         //var showName = this.data.tvshow.title;
@@ -130,7 +97,7 @@ var Show = (function() {
 
         //return showNameSan + '/filenames.txt';
         return 'filenames.txt';
-    }
+    };
 
     Show.prototype.getEpisodeListing = function(ext) {
         var listing = '';

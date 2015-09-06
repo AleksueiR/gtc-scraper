@@ -1,0 +1,32 @@
+{
+    "tvshow": {
+        "title": "Show Title",
+        "showtitle": "Show Title",
+        "rating": "9.200000",
+        "votes": "42",
+        "year": "0",
+        "season": "1",
+        "episode": "176",
+        "displayseason": "-1",
+        "displayepisode": "-1",
+        "plot": "Go deeper into the medical mysteries of House, TV's most compelling drama. Hugh Laurie stars as the brilliant but sarcastic Dr. Gregory House, a maverick physician who is devoid of bedside manner. While his behavior can border on antisocial, Dr. House thrives on the challenge of solving the medical puzzles that other doctors give up on. Together with his hand-picked team of young medical experts, he'll do whatever it takes in the race against the clock to solve the case.",
+        "runtime": "0",
+        "mpaa": "TV-14",
+        "playcount": "0",
+        "status": "Ended",
+        "genre": "Education",
+        "premiered": "2004-11-16",
+        "aired": "1969-12-31",
+        "studio": "TGC",
+        "actor": [{
+            "name": "Hugh Laurie",
+            "role": "Dr. Gregory House",
+            "thumb": "http://thetvdb.com/banners/actors/23839.jpg"
+        }],
+        "resume": {
+            "position": "0.000000",
+            "total": "0.000000"
+        },
+        "dateadded": "2013-01-28 23:33:03"
+    }
+}
