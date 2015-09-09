@@ -1,4 +1,27 @@
-var gtc = require('./src/gtc');
+#! /usr/bin/env node
+
+var walker = require('./src/walker');
+
+walker.examine();
+
+
+
+/*
+
+update ledger
+-s
+--skipupdate
+
+rename files
+-r
+--rename
+
+remove old metadata and rescrape courses
+-f
+--force
+
+*/
+/*var gtc = require('./src/gtc');
 var Promise = require('promise');
 var find = require('array-find');
 var fs = require('fs-extra');
@@ -78,4 +101,4 @@ gtc
         
         fs.outputFileSync('ledger.json', JSON.stringify(ledger, null, 4), 'utf8');
 
-    });
+    });*/

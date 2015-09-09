@@ -10,6 +10,8 @@ var find = require('array-find');
 var gtc = require('./gtc');
 var util = require('./util');
 
+var argv = require('minimist')(process.argv.slice(2));
+
 module.exports.writeShowInfo = function(record) {
 
     console.log(sprintf('   Removing old metadata...'));
@@ -73,12 +75,22 @@ function processEpisodes(show, episodeFiles, basefolder) {
             });
 
             if (episodeFile) {
-                fs.outputFileSync(basefolder + episode.getFileName(), episode.toXML(), 'utf8');
+                var newEpisodeFile;
+                var episodeNfoFile;
 
-                var newEpisodeFile = basefolder + episode.getFileName(p.extname(episodeFile));
+                if (argv.r || argv.rename) {
+                    newEpisodeFile = basefolder + episode.getFileName(p.extname(episodeFile));
+                    episodeNfoFile = basefolder + episode.getFileName();
+                }
+                else {
+                    episodeNfoFile = basefolder + p.basename(episodeFile, p.extname(episodeFile)) +  '.nfo';
+                    //console.log(episodeNfoFile);
+                }
+
+                fs.outputFileSync(episodeNfoFile, episode.toXML(), 'utf8');
 
                 //move episode files
-                if (!fs.existsSync(newEpisodeFile)) {
+                if (newEpisodeFile && !fs.existsSync(newEpisodeFile)) {
                     //fs.move(episodeFile, newEpisodeFile, {}, function(err) {
                     fs.rename(episodeFile, newEpisodeFile, function(err) {
                         if (err) {
@@ -134,8 +146,9 @@ function getFanart(show, basefolder) {
 
 function moveShow(src, dest) {
     // moving base folder
+    // https://stackoverflow.com/questions/8579055/how-i-move-files-on-node-js/29105404#29105404
     //console.log('moving')
-    if (!fs.existsSync(dest)) {
+    if ((argv.r || argv.rename) && !fs.existsSync(dest)) {
 
         return new Promise(function(fulfill, reject) {
             fs.rename(src, dest, function() {

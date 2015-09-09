@@ -15,8 +15,51 @@ var sprintf = require("sprintf-js").sprintf;
 var writer = require('./writer');
 var ledger = require('./ledger');
 
+var argv = require('minimist')(process.argv.slice(2));
+
+//console.log(argv);
+
 module.exports.examine = function() {
-    console.log(process.argv); // use to parse arguments: https://www.npmjs.com/package/minimist
+    return new Promise(function(fulfill, reject) {
+        ledger.getLedger(argv.s || argv.skipupdate)
+            .then(function(ledgerData) {
+                ledger = ledgerData;
+
+                var dirs = walk.sync(argv._[0], {
+                    no_recurse: true
+                });
+
+                console.log(sprintf('Found %s items:', dirs.length));
+
+                async.eachSeries(dirs, function(dir, callback) {
+                    //console.log('found sync:', dir, p.basename(dir), fs.statSync(dir).isDirectory());
+
+                    if (fs.statSync(dir).isDirectory()) {
+                        processShow(dir)
+                            .then(function(record) {
+                                return writer.writeShowInfo(record);
+                            })
+                            .then(function() {
+                                console.log('');
+                                callback();
+                            })
+                            .catch(function() {
+                                console.log('');
+                                callback();
+                            });
+                    }
+                    else {
+                        callback();
+                    }
+
+
+                }, function(err) {
+                    console.log('Scraping completed. Thank you.', err);
+                    fulfill();
+                });
+
+            });
+    });
 };
 
 // ask the user to pick a match or skip
@@ -42,12 +85,18 @@ function askUser(dirname, matches) {
 }
 
 function checkTvshownfo(dir) {
+    // if force
+    if (argv.f || argv.force) {
+        return false;
+    } else {
+    
     return walk.sync(dir, {
         no_recurse: true
     }).some(function(currentValue, index, array) {
         return p.basename(currentValue) === 'tvshow.nfo';
     });
-};
+    }
+}
 
 function processShow(dir) {
     return new Promise(function(fulfill, reject) {
@@ -104,41 +153,3 @@ function processShow(dir) {
         }
     });
 }
-
-ledger.getLedger(true)
-    .then(function(ledgerData) {
-        ledger = ledgerData;
-
-        var dirs = walk.sync(process.argv[2], {
-            no_recurse: true
-        });
-
-        console.log(sprintf('Found %s items:', dirs.length));
-
-        async.eachSeries(dirs, function(dir, callback) {
-            //console.log('found sync:', dir, p.basename(dir), fs.statSync(dir).isDirectory());
-
-            if (fs.statSync(dir).isDirectory()) {
-                processShow(dir)
-                    .then(function(record) {
-                        return writer.writeShowInfo(record)
-                    })
-                    .then(function() {
-                        console.log('');
-                        callback();
-                    })
-                    .catch(function() {
-                        console.log('');
-                        callback();
-                    });
-            }
-            else {
-                callback();
-            }
-
-
-        }, function(err) {
-            console.log('Scraping completed. Thank you.', err);
-        });
-
-    });

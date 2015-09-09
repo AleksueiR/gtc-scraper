@@ -78,7 +78,7 @@ function updateLedger(ids) {
         });
 }
 
-module.exports.getLedger = function(skipCheck) {
+module.exports.getLedger = function(skipUpdate) {
     return new Promise(function(fulfill, reject) {
         readJson('ledger.json')
             .catch(function() {
@@ -98,11 +98,12 @@ module.exports.getLedger = function(skipCheck) {
                 //ledger = JSON.parse(data);
                 ledger = data;
                 console.log(sprintf('Ledger contains %s records.', ledger.length));
-                console.log('Checking for new GTC courses...');
                 
-                if (skipCheck) {
+                if (skipUpdate) {
                     return fulfill(ledger);
                 }
+                
+                console.log('Checking for new GTC courses...');
                 
                 return gtc.scrapeCataloguePage('http://www.thegreatcourses.com/courses')
                     .then(function(ids) {
