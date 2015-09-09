@@ -69,7 +69,7 @@ function processEpisodes(show, episodeFiles, basefolder) {
 
             //show.episodes.forEach(function(episode) {
             var episodeFile = find(episodeFiles, function(file) {
-                var reg = new RegExp('.*' + episode.getEpisodeNumber() + '.*', 'ig');
+                var reg = new RegExp('.*' + 'e' + episode.getEpisodeNumber() + '.*', 'ig');
                 //console.log(p.basename(file), reg.test(p.basename(file)), reg);
                 return reg.test(p.basename(file));
             });
