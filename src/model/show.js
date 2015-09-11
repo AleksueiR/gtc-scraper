@@ -14,7 +14,7 @@ var Show = (function() {
     function Show(data) {
         var tvshow;
         var that = this;
-        
+
         this.data = extend(true, {}, _showTemplate);
         this.episodes = [];
         this.images = {
@@ -25,7 +25,7 @@ var Show = (function() {
 
         tvshow = this.data.tvshow;
 
-        tvshow.title = util.sanitize(data.name);
+        tvshow.title = util.sanitize(data.name.replace(':', ' -'));
         tvshow.showtitle = util.sanitize(data.name);
         tvshow.rating = data.scrapedData.rating;
         tvshow.votes = data.scrapedData.votes;
@@ -42,7 +42,7 @@ var Show = (function() {
         tvshow.runtime = data.scrapedData.runtime;
         tvshow.premiered = moment.unix(data.news_from_date).format('YYYY-MM-DD');
         tvshow.aired = moment.unix(data.news_from_date).format('YYYY-MM-DD');
-        //tvshow.studio = 
+        //tvshow.studio =
 
         tvshow.actor = [{
             'name': data.scrapedData.professor.name,
