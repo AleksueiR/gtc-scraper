@@ -17,6 +17,8 @@ var ledger = require('./ledger');
 
 var argv = require('minimist')(process.argv.slice(2));
 
+var util = require('./util');
+
 //console.log(argv);
 
 module.exports.examine = function() {
@@ -71,7 +73,7 @@ function askUser(dirname, matches) {
             message: sprintf('Found several matches for "%s":', dirname),
             choices: matches.map(function(match, i) {
                 return {
-                    name: match.name, // + ' - ' + match.score,
+                    name: sprintf('%s (%s)', match.name, match.score),
                     value: i
                 };
             }).concat({
@@ -89,7 +91,7 @@ function checkTvshownfo(dir) {
     if (argv.f || argv.force) {
         return false;
     } else {
-    
+
     return walk.sync(dir, {
         no_recurse: true
     }).some(function(currentValue, index, array) {
@@ -102,6 +104,7 @@ function processShow(dir) {
     return new Promise(function(fulfill, reject) {
 
         var dirname = p.basename(dir);
+        var dirnameSan = util.cleanString(dirname, '');
         console.log(sprintf('"%s":', dirname));
 
         if (checkTvshownfo(dir)) {
@@ -110,11 +113,11 @@ function processShow(dir) {
             return;
         }
 
-        var matches = fuzzaldrin.filter(ledger, dirname, {
+        var matches = fuzzaldrin.filter(ledger, dirnameSan, {
             key: 'name',
             maxResults: 5
         }).map(function(match) {
-            match.score = fuzzaldrin.score(match.name, dirname);
+            match.score = fuzzaldrin.score(match.name, dirnameSan);
             return match;
         });
 
