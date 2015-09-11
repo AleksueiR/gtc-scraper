@@ -1,0 +1,24 @@
+{
+    "episodedetails": {
+        "title": "My TV Episode",
+        "season": "01",
+        "episode": "1",
+        "plot": "he best episode in the world",
+        "playcount": "0",
+        "credits": "Writer",
+        "director": "Mr. Vision",
+        "aired": "2000-12-31",
+        "premiered": "2010-09-24",
+        "studio": "TGC",
+        "mpaa": "MPAA certification",
+        "actor": {
+            "name": "Little Suzie",
+            "role": "Pole Jumper/Dancer"
+        },
+        "fileinfo": {
+            "streamdetails": {
+
+            }
+        }
+    }
+}

@@ -4,36 +4,9 @@ var jstoxml = require('jstoxml');
 var util = require('./../util');
 var p = require('path');
 var sprintf = require("sprintf-js").sprintf;
+var fs = require('fs-extra');
 
-var _episodeTemplate = {
-    "episodedetails": {
-        "title": "My TV Episode",
-        //"rating": "10.00",
-        "season": "01",
-        "episode": "1",
-        "plot": "he best episode in the world",
-        //"thumb": "http://thetvdb.com/banners/episodes/164981/2528821.jpg",
-        "playcount": "0",
-        "credits": "Writer",
-        "director": "Mr. Vision",
-        "aired": "2000-12-31",
-        "premiered": "2010-09-24",
-        "studio": "TGC",
-        "mpaa": "MPAA certification",
-        //"epbookmark": "200",
-        //"displayseason": "3",
-        //"displayepisode": "4096",
-        "actor": {
-            "name": "Little Suzie",
-            "role": "Pole Jumper/Dancer"
-        },
-        "fileinfo": {
-            "streamdetails": {
-
-            }
-        }
-    }
-};
+var _episodeTemplate = fs.readJsonSync('./src/model/episode.json');
 
 var Episode = (function() {
     //Episode.prototype.data = {};
@@ -49,6 +22,7 @@ var Episode = (function() {
         episode.title = util.sanitize(data.title);
         //episode.rating
         //episode.season = 1;
+        // round episode number to two digits; might need to update this to handle number of episodes > 99
         episode.episode = sprintf('%02d', count.toString());
         episode.plot = data.description;
         //episode.thumb = showData.thumb_grid;
