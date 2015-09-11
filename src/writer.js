@@ -30,7 +30,7 @@ module.exports.writeShowInfo = function(record) {
 
             var episodeFiles = walk.sync(record.dir)
                 .filter(function(file) {
-                    return p.extname(file) === '.mkv';
+                    return /(\.avi|\.mkv)/.test(p.extname(file));
                 });
             var basefolder = record.dir + p.sep;
 
