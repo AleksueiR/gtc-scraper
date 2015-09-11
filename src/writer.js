@@ -69,7 +69,7 @@ function processEpisodes(show, episodeFiles, basefolder) {
 
             //show.episodes.forEach(function(episode) {
             var episodeFile = find(episodeFiles, function(file) {
-                var reg = new RegExp('.*' + 'e' + episode.getEpisodeNumber() + '.*', 'ig');
+                var reg = new RegExp('\\b(s\\d+)?e?' + episode.getEpisodeNumber() + '\\b', 'ig');
                 //console.log(p.basename(file), reg.test(p.basename(file)), reg);
                 return reg.test(p.basename(file));
             });
@@ -86,7 +86,6 @@ function processEpisodes(show, episodeFiles, basefolder) {
                     episodeNfoFile = basefolder + p.basename(episodeFile, p.extname(episodeFile)) +  '.nfo';
                     //console.log(episodeNfoFile);
                 }
-
                 fs.outputFileSync(episodeNfoFile, episode.toXML(), 'utf8');
 
                 //move episode files
