@@ -7,8 +7,17 @@ var gm = require('gm').subClass({
 });
 var p = require('path');
 
-module.exports.sanitize = function(string) {
-    return sanitize(string).replace(/\u2013|\u2014/g, '-').trim();
+module.exports.sanitize = function(string, char) {
+    char = char || '-';
+    return sanitize(string).replace(/\u2013|\u2014/g, char).trim();
+};
+
+/**
+ * Cleans the given string by replacing all the charcters except \w and ' ' with a specified char or ''.
+ */
+module.exports.cleanString = function(string, char) {
+    char = char || '-';
+    return string.replace(/[^\w ]/g, '');
 };
 
 module.exports.downloadFile = function(target, destination, callback) {
