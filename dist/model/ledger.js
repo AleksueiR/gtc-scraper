@@ -65,14 +65,17 @@ class Page {
         });
     }
     get posterUrl() {
-        const image = this.images.length > 2 ? this.images[1] : null;
+        const image = this.images.length > 1 ? this.images[1] : null;
         if (!image) {
             return null;
         }
         return image.url;
     }
     get fanartUrls() {
-        const images = this.images.length > 2 ? [...this.images].splice(1, 1) : this.images;
+        const images = [...this.images];
+        if (images.length > 1) {
+            images.splice(1, 1);
+        }
         if (images.length === 0) {
             return null;
         }

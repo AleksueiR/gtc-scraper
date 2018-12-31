@@ -128,7 +128,7 @@ export class Page {
     get posterUrl(): string | null {
         // const image = this.images.find(i => i.url.match(/800x600/) !== null);
         // as a rule, cover image is always the second in the list; otherwise, there seem to be no naming convention for covers :/
-        const image = this.images.length > 2 ? this.images[1] : null;
+        const image = this.images.length > 1 ? this.images[1] : null;
         if (!image) {
             return null;
         }
@@ -139,7 +139,11 @@ export class Page {
     get fanartUrls(): string[] | null {
         // const images = this.images.filter(i => i.url.match(/800x600/) === null);
         // as a rule, cover image is always the second in the list; otherwise, there seem to be no naming convention for covers :/
-        const images = this.images.length > 2 ? [...this.images].splice(1, 1) : this.images;
+        const images = [...this.images];
+        if (images.length > 1) {
+            images.splice(1, 1);
+        }
+
         if (images.length === 0) {
             return null;
         }
