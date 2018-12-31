@@ -1,0 +1,32 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "tsc:build",
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "problemMatcher": ["$tsc"],
+            "group": "build"
+        },
+        {
+            "label": "tsc:build-custom",
+            "type": "shell",
+            "windows": {
+                "command": "C:\\Users\\Aleksuei Riabtsev\\AppData\\Roaming\\npm\\tsc",
+                "args": ["-p", "${workspaceFolder}/tsconfig.json"]
+            },
+            "group": "build",
+            "problemMatcher": ["$tsc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        }
+    ]
+}
