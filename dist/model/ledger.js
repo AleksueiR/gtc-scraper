@@ -72,7 +72,7 @@ class Page {
         return image.url;
     }
     get fanartUrls() {
-        const images = this.images.filter(i => i.url.match(/800x600/) === null);
+        const images = this.images.length > 2 ? [...this.images].splice(1, 1) : this.images;
         if (images.length === 0) {
             return null;
         }
