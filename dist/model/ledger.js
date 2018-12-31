@@ -65,7 +65,7 @@ class Page {
         });
     }
     get posterUrl() {
-        const image = this.images.find(i => i.url.match(/800x600/) !== null);
+        const image = this.images.length > 2 ? this.images[1] : null;
         if (!image) {
             return null;
         }

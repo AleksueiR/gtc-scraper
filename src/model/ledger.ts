@@ -126,7 +126,9 @@ export class Page {
     }
 
     get posterUrl(): string | null {
-        const image = this.images.find(i => i.url.match(/800x600/) !== null);
+        // const image = this.images.find(i => i.url.match(/800x600/) !== null);
+        // as a rule, cover image is always the second in the list; otherwise, there seem to be no naming convention for covers :/
+        const image = this.images.length > 2 ? this.images[1] : null;
         if (!image) {
             return null;
         }
