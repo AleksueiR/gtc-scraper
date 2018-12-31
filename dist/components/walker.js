@@ -21,7 +21,7 @@ async function processFolder(ledger, baseDir, dir) {
         console.log(`Skipping file '${dir}'`);
         return;
     }
-    const matches = dir.match(/(\d{4}).*/);
+    const matches = dir.match(/(\d{3,4}).*/);
     if (!matches) {
         console.log(`Skipping malformed folder '${dir}'`);
         return;
