@@ -6,16 +6,16 @@ const jstoxml_1 = tslib_1.__importDefault(require("jstoxml"));
 const util_1 = require("./../util");
 class Ledger {
     constructor(value) {
-        this.pages = value.pages.map(p => new Page(p));
+        this.pages = value.pages.map((p) => new Page(p));
     }
 }
 exports.Ledger = Ledger;
 class Page {
     constructor(value) {
         ({ title: this.title, description: this.description, rating: this.rating, id: this.id } = value);
-        this.lectures = value.lectures.map(l => new Lecture(l, this));
-        this.images = value.images.map(i => new Image(i));
-        this.professor = value.professor.map(p => new Professor(p));
+        this.lectures = value.lectures.map((l) => new Lecture(l, this));
+        this.images = value.images.map((i) => new Image(i));
+        this.professor = value.professor.map((p) => new Professor(p));
     }
     get safeTitle() {
         return util_1.sanitize(this.title.replace(':', ` - `));
@@ -25,7 +25,7 @@ class Page {
         let num = 6;
         util_1.sanitize(this.title)
             .split(' ')
-            .forEach(elm => {
+            .forEach((elm) => {
             result += (num > 0 && elm[0]) || '';
             num--;
         });
@@ -52,7 +52,7 @@ class Page {
                 premiered: moment_1.default().format('YYYY-MM-DD'),
                 aired: moment_1.default().format('YYYY-MM-DD'),
                 studio: 'TGC',
-                actor: this.professor.map(p => p.actorInfo),
+                actor: this.professor.map((p) => p.actorInfo),
                 resume: {
                     position: '0.000000',
                     total: '0.000000'
@@ -79,7 +79,7 @@ class Page {
         if (images.length === 0) {
             return null;
         }
-        return images.map(i => i.url);
+        return images.map((i) => i.url);
     }
 }
 exports.Page = Page;
@@ -101,12 +101,8 @@ class Lecture {
                 playcount: '0',
                 credits: 'Writer',
                 director: 'Mr. Tard',
-                aired: moment_1.default()
-                    .add(parseInt(this.id), 'd')
-                    .format('YYYY-MM-DD'),
-                premiered: moment_1.default()
-                    .add(parseInt(this.id), 'd')
-                    .format('YYYY-MM-DD'),
+                aired: moment_1.default().add(parseInt(this.id), 'd').format('YYYY-MM-DD'),
+                premiered: moment_1.default().add(parseInt(this.id), 'd').format('YYYY-MM-DD'),
                 studio: 'TGC',
                 mpaa: 'MPAA certification',
                 actor: {

@@ -50,7 +50,7 @@ export class Ledger {
     pages: Page[];
 
     constructor(value: Ledger.Untyped) {
-        this.pages = value.pages.map(p => new Page(p));
+        this.pages = value.pages.map((p) => new Page(p));
     }
 }
 
@@ -66,9 +66,9 @@ export class Page {
     constructor(value: Page.Untyped) {
         ({ title: this.title, description: this.description, rating: this.rating, id: this.id } = value);
 
-        this.lectures = value.lectures.map(l => new Lecture(l, this));
-        this.images = value.images.map(i => new Image(i));
-        this.professor = value.professor.map(p => new Professor(p));
+        this.lectures = value.lectures.map((l) => new Lecture(l, this));
+        this.images = value.images.map((i) => new Image(i));
+        this.professor = value.professor.map((p) => new Professor(p));
     }
 
     get safeTitle(): string {
@@ -81,7 +81,7 @@ export class Page {
 
         sanitize(this.title)
             .split(' ')
-            .forEach(elm => {
+            .forEach((elm) => {
                 result += (num > 0 && elm[0]) || '';
                 num--;
             });
@@ -110,7 +110,7 @@ export class Page {
                 premiered: moment().format('YYYY-MM-DD'),
                 aired: moment().format('YYYY-MM-DD'),
                 studio: 'TGC',
-                actor: this.professor.map(p => p.actorInfo),
+                actor: this.professor.map((p) => p.actorInfo),
                 resume: {
                     position: '0.000000',
                     total: '0.000000'
@@ -148,7 +148,7 @@ export class Page {
             return null;
         }
 
-        return images.map(i => i.url);
+        return images.map((i) => i.url);
     }
 }
 
@@ -179,12 +179,8 @@ export class Lecture {
                 playcount: '0',
                 credits: 'Writer',
                 director: 'Mr. Tard',
-                aired: moment()
-                    .add(parseInt(this.id), 'd')
-                    .format('YYYY-MM-DD'),
-                premiered: moment()
-                    .add(parseInt(this.id), 'd')
-                    .format('YYYY-MM-DD'),
+                aired: moment().add(parseInt(this.id), 'd').format('YYYY-MM-DD'),
+                premiered: moment().add(parseInt(this.id), 'd').format('YYYY-MM-DD'),
                 studio: 'TGC',
                 mpaa: 'MPAA certification',
                 actor: {

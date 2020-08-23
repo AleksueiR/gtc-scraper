@@ -20,17 +20,24 @@ export async function downloadFile(target: string, destination: string) {
 }
 
 export function cropPoster(fileUrl: string): Promise<void> {
+    const sizeMap: Record<number, [number, number, number, number]> = {
+        451: [314, 451, 243, 0],
+        600: [417, 600, 192, 0]
+    };
+
     return new Promise((resolve, reject) => {
-        imageMagick(fileUrl)
-            .crop(417, 600, 192, 0)
-            .write(fileUrl, function(err: any) {
-                if (err) {
-                    console.log('Cannot crop image :/', err);
-                    reject();
-                } else {
-                    console.log('Success:');
-                    resolve();
-                }
-            });
+        imageMagick(fileUrl).size((err, size) => {
+            imageMagick(fileUrl)
+                .crop(...sizeMap[size.height])
+                .write(fileUrl, function (err: any) {
+                    if (err) {
+                        console.log('Cannot crop image :/', err);
+                        reject();
+                    } else {
+                        console.log('Success:');
+                        resolve();
+                    }
+                });
+        });
     });
 }

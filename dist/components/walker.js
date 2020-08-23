@@ -13,7 +13,7 @@ async function examine(baseDir) {
     const dirs = walkdir.sync(baseDir, {
         no_recurse: true
     });
-    dirs.forEach(dir => processFolder(ledger, baseDir, dir));
+    dirs.forEach((dir) => processFolder(ledger, baseDir, dir));
 }
 exports.default = examine;
 async function processFolder(ledger, baseDir, dir) {
@@ -26,7 +26,7 @@ async function processFolder(ledger, baseDir, dir) {
         console.log(`Skipping malformed folder '${dir}'`);
         return;
     }
-    const courseMeta = ledger.pages.find(p => p.id === matches[1]);
+    const courseMeta = ledger.pages.find((p) => p.id === matches[1]);
     if (!courseMeta) {
         console.log(`Cannot find '${matches[1]}' course info`);
         return;
@@ -59,7 +59,7 @@ async function getPosterImages(courseMeta, baseDir) {
     }
     const imgExt = path_1.default.extname(courseMeta.posterUrl);
     const courseDir = `${baseDir}${path_1.default.sep}${courseMeta.id} - ${courseMeta.safeTitle}`;
-    await util_1.downloadFile(courseMeta.posterUrl, `${courseDir}${path_1.default.sep}poster${imgExt}`);
+    await util_1.downloadFile(courseMeta.posterUrl.replace('plus_image/800x451', 'image/800x600'), `${courseDir}${path_1.default.sep}poster${imgExt}`).catch(() => util_1.downloadFile(courseMeta.posterUrl, `${courseDir}${path_1.default.sep}poster${imgExt}`));
     await util_1.cropPoster(`${courseDir}${path_1.default.sep}poster${imgExt}`);
     fs_extra_1.default.copySync(`${courseDir}${path_1.default.sep}poster${imgExt}`, `${courseDir}${path_1.default.sep}season01-poster${imgExt}`);
     fs_extra_1.default.copySync(`${courseDir}${path_1.default.sep}poster${imgExt}`, `${courseDir}${path_1.default.sep}season-all-poster${imgExt}`);
@@ -88,7 +88,7 @@ function getActorImages(courseMeta, baseDir) {
     if (!fs_extra_1.default.existsSync(actorsDir)) {
         fs_extra_1.default.mkdirSync(actorsDir);
     }
-    courseMeta.professor.forEach(pr => {
+    courseMeta.professor.forEach((pr) => {
         util_1.downloadFile(pr.image, `${actorsDir}${path_1.default.sep}${pr.name.replace(/ /g, '_')}.jpg`);
     });
 }

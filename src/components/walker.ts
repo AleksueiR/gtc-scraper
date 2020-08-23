@@ -16,7 +16,7 @@ export default async function examine(baseDir: string) {
         no_recurse: true
     });
 
-    dirs.forEach(dir => processFolder(ledger, baseDir, dir));
+    dirs.forEach((dir) => processFolder(ledger, baseDir, dir));
 }
 
 async function processFolder(ledger: Ledger, baseDir: string, dir: string): Promise<void> {
@@ -32,7 +32,7 @@ async function processFolder(ledger: Ledger, baseDir: string, dir: string): Prom
         return;
     }
 
-    const courseMeta = ledger.pages.find(p => p.id === matches[1]);
+    const courseMeta = ledger.pages.find((p) => p.id === matches[1]);
     if (!courseMeta) {
         console.log(`Cannot find '${matches[1]}' course info`);
         return;
@@ -86,7 +86,12 @@ async function getPosterImages(courseMeta: Page, baseDir: string): Promise<void>
     const courseDir = `${baseDir}${p.sep}${courseMeta.id} - ${courseMeta.safeTitle}`;
 
     // download poster and make two more copies of it
-    await downloadFile(courseMeta.posterUrl, `${courseDir}${p.sep}poster${imgExt}`);
+    // for some reason, the new url point to the smaller image; try to get the bigger one first
+    await downloadFile(
+        courseMeta.posterUrl.replace('plus_image/800x451', 'image/800x600'),
+        `${courseDir}${p.sep}poster${imgExt}`
+    ).catch(() => downloadFile(courseMeta.posterUrl!, `${courseDir}${p.sep}poster${imgExt}`));
+
     await cropPoster(`${courseDir}${p.sep}poster${imgExt}`);
     fsExtra.copySync(`${courseDir}${p.sep}poster${imgExt}`, `${courseDir}${p.sep}season01-poster${imgExt}`);
     fsExtra.copySync(`${courseDir}${p.sep}poster${imgExt}`, `${courseDir}${p.sep}season-all-poster${imgExt}`);
@@ -124,7 +129,7 @@ function getActorImages(courseMeta: Page, baseDir: string): void {
         fsExtra.mkdirSync(actorsDir);
     }
 
-    courseMeta.professor.forEach(pr => {
+    courseMeta.professor.forEach((pr) => {
         downloadFile(pr.image, `${actorsDir}${p.sep}${pr.name.replace(/ /g, '_')}.jpg`);
     });
 }
