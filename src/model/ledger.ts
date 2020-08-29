@@ -22,7 +22,7 @@ export namespace Page {
         rating: string;
         lectures: Lecture.Untyped[];
         images: Image.Untyped[];
-        professor: Professor.Untyped[];
+        professor: Professor.Untyped[] | undefined;
         id: string;
     }
 }
@@ -68,7 +68,7 @@ export class Page {
 
         this.lectures = value.lectures.map((l) => new Lecture(l, this));
         this.images = value.images.map((i) => new Image(i));
-        this.professor = value.professor.map((p) => new Professor(p));
+        this.professor = (value.professor || []).map((p) => new Professor(p));
     }
 
     get safeTitle(): string {
@@ -183,11 +183,7 @@ export class Lecture {
                 premiered: moment().add(parseInt(this.id), 'd').format('YYYY-MM-DD'),
                 studio: 'TGC',
                 mpaa: 'MPAA certification',
-                actor: {
-                    name: this._page.professor[0].name,
-                    role: this._page.professor[0].bio,
-                    thumb: this._page.professor[0].image
-                },
+                actor: this._page.professor.length > 0 ? this._page.professor[0].actorInfo : undefined,
                 fileinfo: {
                     streamdetails: {}
                 }

@@ -15,7 +15,7 @@ class Page {
         ({ title: this.title, description: this.description, rating: this.rating, id: this.id } = value);
         this.lectures = value.lectures.map((l) => new Lecture(l, this));
         this.images = value.images.map((i) => new Image(i));
-        this.professor = value.professor.map((p) => new Professor(p));
+        this.professor = (value.professor || []).map((p) => new Professor(p));
     }
     get safeTitle() {
         return util_1.sanitize(this.title.replace(':', ` - `));
@@ -105,11 +105,7 @@ class Lecture {
                 premiered: moment_1.default().add(parseInt(this.id), 'd').format('YYYY-MM-DD'),
                 studio: 'TGC',
                 mpaa: 'MPAA certification',
-                actor: {
-                    name: this._page.professor[0].name,
-                    role: this._page.professor[0].bio,
-                    thumb: this._page.professor[0].image
-                },
+                actor: this._page.professor.length > 0 ? this._page.professor[0].actorInfo : undefined,
                 fileinfo: {
                     streamdetails: {}
                 }
